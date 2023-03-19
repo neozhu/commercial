@@ -3,12 +3,18 @@
 ![Demo](doc/t1.jpg)
 
 ### Demo WebSite: https://inspectpro.i247365.net/
-#### Login 
+#### 登录用户和密码 
 + User Name:  Demo
 + Password:   123456
 
 ### 项目介绍
 本项目是一款海关检验委托业务管理系统，主要包括委托单登记、导入导出、上传、审核、报价、账单审核、账单发送、开票、报告登记、电子报告自动发送、纸质报告邮寄登记和收款情况管理等功能，旨在提高业务管理效率和质量。
+
+### 运行环境
+- .net franework 4.8
+- windows server 2012以上
+- MS Sql Server 2012以上
+
 
 ### 业务需求
 1. 委托单登记功能
