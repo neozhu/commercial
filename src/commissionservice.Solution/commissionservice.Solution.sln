@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "urf.lib", "urf.lib", "{D641147D-6D1B-42E7-9931-5663AEE3061B}"
+	ProjectSection(SolutionItems) = preProject
+		urf.lib\Repository.Pattern.dll = urf.lib\Repository.Pattern.dll
+		urf.lib\Repository.Pattern.Ef6.dll = urf.lib\Repository.Pattern.Ef6.dll
+		urf.lib\Service.Pattern.dll = urf.lib\Service.Pattern.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSite", "WebSite", "{7D194A82-EF63-4FF3-BD68-1D99848227D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebSite\WebApp\WebApp.csproj", "{BDBD18FD-EDB6-488B-B7A9-984970CA7CEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDBD18FD-EDB6-488B-B7A9-984970CA7CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDBD18FD-EDB6-488B-B7A9-984970CA7CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDBD18FD-EDB6-488B-B7A9-984970CA7CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDBD18FD-EDB6-488B-B7A9-984970CA7CEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BDBD18FD-EDB6-488B-B7A9-984970CA7CEE} = {7D194A82-EF63-4FF3-BD68-1D99848227D7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {892DE1D1-5C6F-418A-91AD-3C6A06F9C123}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://neozhu.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = WebSite\\WebApp\\WebApp.csproj
+		SccProjectTopLevelParentUniqueName1 = commissionservice.Solution.sln
+		SccProjectName1 = WebSite/WebApp
+		SccLocalPath1 = WebSite\\WebApp
+	EndGlobalSection
+EndGlobal

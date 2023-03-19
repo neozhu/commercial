@@ -1,0 +1,478 @@
+﻿@model WebApp.Models.Company
+@{
+  ViewData["Title"] = "公司信息";
+  ViewData["PageName"] = "Companies_Index";
+  ViewData["Heading"] = "<i class='fal fa-window text-primary'></i>  公司信息";
+  ViewData["Category1"] = "组织管理";
+  ViewData["PageDescription"] = "";
+}
+@section HeadBlock {
+  <link href="@Fingerprint.Tag("/Content/css/notifications/toastr/toastr.css")" rel="stylesheet" />
+  <link href="@Fingerprint.Tag("/Scripts/easyui/themes/insdep/easyui.css")" rel="stylesheet" />
+  <link href="@Fingerprint.Tag("/Content/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css")" rel="stylesheet" />
+  <style>
+    .tree-icon.tree-file,
+    .tree-icon.tree-folder,
+    .tree-icon.tree-folder.tree-folder-open {
+      background-image: none;
+      width: 2px;
+      height: auto;
+    }
+  </style>
+}
+<div class="row">
+  <div class="col-lg-12 col-xl-12">
+    <div id="panel-1" class="panel">
+      <div class="panel-hdr">
+        <h2>
+          公司信息
+        </h2>
+        <div class="panel-toolbar">
+          <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"><i class="fal fa-window-minimize"></i></button>
+          <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"><i class="fal fa-expand"></i></button>
+          @*<button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"><i class="fal fa-trash-alt"></i></button>*@
+        </div>
+
+      </div>
+      <div class="panel-container enable-loader show">
+        <div class="loader"><i class="fal fa-spinner-third fa-spin-4x fs-xxl"></i></div>
+        <div class="panel-content py-2 rounded-bottom border-faded border-left-0 border-right-0  text-muted bg-faded bg-subtlelight-fade">
+          <div class="row no-gutters align-items-center">
+            <div class="col">
+              <!-- 开启授权控制请参考 @@if (Html.IsAuthorize("Create") -->
+              <div class="btn-group btn-group-sm">
+                <button name="searchbutton" class="btn btn-default"> <span class="fal fa-search mr-1"></span> @Html.L("Refresh") </button>
+              </div>
+              <div class="btn-group btn-group-sm">
+                <button name="appendbutton" class="btn btn-default"> <span class="fal fa-plus mr-1"></span> 注册新公司 </button>
+              </div>
+              <div class="btn-group btn-group-sm">
+                <button name="deleterowbutton" disabled class="btn btn-default"> <span class="fal fa-trash-alt mr-1"></span> @Html.L("Delete") </button>
+              </div>
+              <div class="btn-group btn-group-sm hidden-xs">
+                <button name="importexcelbutton" type="button" class="btn btn-default"><span class="fal fa-cloud-upload mr-1"></span> @Html.L("Import") </button>
+                <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                  <button name="downloadtemplatebutton" class="dropdown-item js-waves-on"><span class="fal fa-download"></span> @Html.L("Download") </button>
+                </div>
+              </div>
+              <div class="btn-group btn-group-sm ">
+                <button name="exportexcelbutton" class="btn btn-default"> <span class="fal fa-file-excel mr-1"></span>  @Html.L("Export") </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="panel-content">
+          <div class="table-responsive">
+            <table id="companies_datagrid">
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+@section ScriptsBlock {
+  @{ Html.RenderPartial("_ImportWindow", new { url = "/Companies/ImportData", model = "Company", autosave = true, callback = "reloadData()" }); }
+
+  @{ Html.RenderPartial("_PopupDetailFormView", new WebApp.Models.Company()); }
+  <script src="@Fingerprint.Tag("/Scripts/notifications/toastr/toastr.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/easyui/jquery.easyui.min.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/easyui/plugins/datagrid-filter.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/easyui/locale/easyui-lang-zh_CN.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/jquery.easyui.component.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/jquery.extend.formatter.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/jquery.custom.extend.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/plugin/jquery.serializejson/jquery.serializejson.min.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/plugin/filesaver/FileSaver.min.js")"></script>
+  <script src="@Fingerprint.Tag("/Scripts/plugin/filesaver/jquery.fileDownload.js")"></script>
+  <script type="text/javascript">
+    //绑定按钮事件
+    $('button[name="searchbutton"]').on('click', reloadData);
+    $('button[name="appendbutton"]').on('click', appendItem);
+    $('button[name="deleterowbutton"]').on('click', deleteRow);
+    $('button[name="exportexcelbutton"]').on('click', exportExcel);
+    $('button[name="importexcelbutton"]').on('click', () => {
+      importExcel('Company')
+    });
+    $('button[name="downloadtemplatebutton"]').on('click', () => {
+      downloadTemplate('Company')
+    });
+    //全屏事件
+    document.addEventListener('panel.onfullscreen', () => {
+         $dg.treegrid('resize');
+     });
+      //是否强制从后台取值
+      const REQUIRBACKEND = false;
+      //是否开启行内编辑
+      const EDITINLINE = false;
+      var company = {};
+
+       //执行导出下载Excel
+       function exportExcel() {
+                const filterRules = JSON.stringify($dg.treegrid('options').filterRules);
+                //console.log(filterRules);
+                const dialog = bootbox.dialog({
+                    message: '<div class="text-center"><i class="fal fa-spinner fa-pulse fa-lg mr-1"></i> 正在执行...</div>',
+                    closeButton: false
+                 });
+                let formData = new FormData();
+                formData.append('filterRules', filterRules);
+                formData.append('sort', 'Id');
+                formData.append('order', 'asc');
+         //const param = {
+         //  filterRules: filterRules,
+         //  sort: 'Id',
+         //  order:'asc'
+         //};
+         //console.log(param)
+         $.postDownload('/Companies/ExportExcel', formData).then(res => {
+                  setTimeout(() => {
+                    dialog.modal('hide')
+                  }, 300)
+                    toastr.success('导出成功!');
+                }).catch(err => {
+                    dialog.modal('hide')
+                    $.messager.alert('导出失败', err.statusText, 'error');
+                });
+
+        }
+
+       var editIndex = undefined;
+       //重新加载数据
+       function reloadData() {
+            $dg.treegrid('unselectAll');
+            $dg.treegrid('uncheckAll');
+            $dg.treegrid('reload');
+       }
+
+
+    //新增记录
+  async function appendItem() {
+    var selected = $dg.treegrid('getSelected');
+    company = {
+      Address: '-',
+      RegisterDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+      ExpirationDate: null,
+      ParentId: selected?.Id,
+      Ctype: selected?.Ctype
+    };
+
+    //弹出新增窗口
+    opencompanydetailwindow(company, 'Added');
+
+  }
+    //删除编辑的行
+    function deleteRow() {
+       if ($dg.treegrid('getChecked').length<=0 && EDITINLINE) {
+          if (editIndex !== undefined) {
+             const delindex = editIndex;
+             $dg.treegrid('cancelEdit', delindex)
+                .treegrid('deleteRow', delindex);
+               hook = true;
+               $("button[name*='cancelchangesbutton']").prop('disabled', false);
+               $("button[name*='savechangesbutton']").prop('disabled', false);
+           }else{
+              const rows = $dg.treegrid('getChecked');
+              rows.slice().reverse().forEach(row => {
+                const rowindex = $dg.treegrid('getRowIndex', row);
+                $dg.treegrid('deleteRow', rowindex);
+                hook = true;
+                $("button[name*='cancelchangesbutton']").prop('disabled', false);
+                $("button[name*='savechangesbutton']").prop('disabled', false);
+            });
+           }
+        } else {
+          deleteChecked();
+        }
+    }
+    //删除选中的行
+    function deleteChecked() {
+        const checked = $dg.treegrid('getChecked').filter(item=>item.Id!=null && item.Id > 0).map(item => {
+                   return item.Id;
+                });;
+        if (checked.length > 0) {
+              deleteRows(checked);
+         } else {
+                $.messager.alert('提示', '请先选择要删除的记录!','question');
+         }
+     }
+    //执行删除
+    function deleteRows(selected){
+      $.messager.confirm('确认', `你确定要删除这 <span class='badge badge-icon position-relative'>${selected.length} </span> 行记录?`, result => {
+       if (result) {
+         $.post('/Companies/DeleteChecked', { id: selected })
+                         .done(response => {
+                                if (response.success) {
+                                    toastr.error(`成功删除 [${selected.length}] 行记录`);
+                                    reloadData();
+                                } else {
+                                    $.messager.alert('错误', response.err,'error');
+                                }
+                          })
+                          .fail((jqXHR, textStatus, errorThrown) => {
+                             $.messager.alert('异常', `${jqXHR.status}: ${jqXHR.statusText} `, 'error');
+                          });
+        }
+      });
+    }
+
+    //弹出明细信息
+  async function showdetailsWindow(id, index) {
+    $dg.treegrid('select', id);
+    const company = $dg.treegrid('getSelected');
+    const parent = $dg.treegrid('getParent',id);
+    company.ParentId = parent?.Id;
+    opencompanydetailwindow(company,'Modified');
+  }
+
+    //初始化定义treegrid
+    var $dg = $('#companies_datagrid');
+  $(() => {
+    //定义treegrid结构
+    $dg.treegrid({
+      fit: false,
+      height: window.innerHeight - 385,
+      rownumbers: true,
+      checkOnSelect: false,
+      selectOnCheck: false,
+      idField: 'Id',
+      treeField: 'Name',
+      remoteFilter: false,
+      singleSelect: true,
+      url: '/Companies/GetTreeData',
+      method: 'get',
+      pagination: false,
+      clientPaging: true,
+      striped: true,
+      pageList: [10, 20, 50, 100, 500, 2000],
+      filterRules: [],
+      onBeforeLoad: function () {
+        $('.enable-loader').removeClass('enable-loader')
+      },
+      onLoadSuccess: function (data) {
+        editIndex = undefined;
+        $("button[name*='deleterowbutton']").prop('disabled', true);
+        $("button[name*='savechangesbutton']").prop('disabled', true);
+        $("button[name*='cancelchangesbutton']").prop('disabled', true);
+       
+      },
+      onCheck: function () {
+        $("button[name*='deleterowbutton']").prop('disabled', false);
+      },
+      onUncheck: function () {
+        const checked = $(this).treegrid('getChecked').length > 0;
+        $("button[name*='deleterowbutton']").prop('disabled', !checked);
+      },
+      onCheckAll: function (rows) {
+        if (rows.length > 0) {
+          $("button[name*='deleterowbutton']").prop('disabled', false);
+        }
+      },
+      onUncheckAll: function () {
+        $("button[name*='deleterowbutton']").prop('disabled', true);
+      },
+      onSelect: function (index, row) {
+        company = row;
+      },
+      onBeforeEdit: function (index, row) {
+        editIndex = index;
+        row.editing = true;
+        $("button[name*='deleterowbutton']").prop('disabled', false);
+        $("button[name*='cancelchangesbutton']").prop('disabled', false);
+        $("button[name*='savechangesbutton']").prop('disabled', false);
+        $(this).treegrid('refreshRow', index);
+      },
+      onBeginEdit: function (index, row) {
+        //const editors = $(this).treegrid('getEditors', index);
+        const parentid = $(this).treegrid('getEditor', { index: index, field: 'ParentId' });
+        $(parentid.target).combobox('options')
+          .onSelect = (item) => {
+            row['ParentId'] = item.Id;
+            row['ParentName'] = item.Name;
+          };
+        $(parentid.target).combobox('textbox').bind('keydown', function (e) {
+          if (e.keyCode === 13) {
+            $(e.target).emulateTab();
+          }
+        });
+
+      },
+      onEndEdit: function (index, row) {
+
+      },
+      onAfterEdit: function (index, row) {
+        row.editing = false;
+        editIndex = undefined;
+        $(this).treegrid('refreshRow', index);
+      },
+      onCancelEdit: function (index, row) {
+        row.editing = false;
+        editIndex = undefined;
+        $("button[name*='deleterowbutton']").prop('disabled', true);
+        $("button[name*='savechangesbutton']").prop('disabled', true);
+        $("button[name*='cancelchangesbutton']").prop('disabled', true);
+        $(this).treegrid('refreshRow', index);
+      },
+      frozenColumns: [[
+        /*开启CheckBox选择功能*/
+        { field: 'ck', checkbox: true },
+        {
+          field: 'action',
+          title: '@Html.L("Command")',
+          align: 'center',
+          width: 85,
+          sortable: false,
+          resizable: true,
+          formatter: function showdetailsformatter(value, row, index) {
+            if (!row.editing) {
+              return `<div class="btn-group">\
+                        <button onclick="showdetailsWindow('${row.Id}',  ${index})" class="btn btn-primary btn-sm btn-icon waves-effect waves-themed" data-toggle="tooltip" data-placement="right" title="@Html.L("EditDetail")" ><i class="fal fa-edit"></i> </button>\
+                        <button onclick="deleteRows(['${row.Id}'],${index})" class="btn btn-primary btn-sm btn-icon waves-effect waves-themed" data-toggle="tooltip" data-placement="right" title="@Html.L("Delete")" ><i class="fal fa-trash-alt"></i> </button>\
+                      </div>`;
+            } else {
+              return `<button class="btn btn-primary btn-sm btn-icon waves-effect waves-themed" disabled title="查看明细"  ><i class="fal fa-edit"></i> </button>`;
+            }
+          }
+        }
+      ]],
+      columns: [[
+
+        {    /*企业名称*/
+          field: 'Name',
+          title: '@Html.DisplayNameFor(model => model.Name)',
+          width: 230,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*企业十位编码*/
+          field: 'TradeCode',
+          title: '@Html.DisplayNameFor(model => model.TradeCode)',
+          width: 120,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*主管海关代码*/
+          field: 'MasterCustom',
+          title: '@Html.DisplayNameFor(model => model.MasterCustom)',
+          width: 120,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*统一社会信用代码*/
+          field: 'CreditCode',
+          title: '@Html.DisplayNameFor(model => model.CreditCode)',
+          width: 150,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*备案号*/
+          field: 'Code',
+          title: '@Html.DisplayNameFor(model => model.Code)',
+          width: 120,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*企业类型*/
+          field: 'Ctype',
+          title: '@Html.DisplayNameFor(model => model.Ctype)',
+          width: 160,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*地址*/
+          field: 'Address',
+          title: '@Html.DisplayNameFor(model => model.Address)',
+          width: 200,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*法人*/
+          field: 'LegalPerson',
+          title: '@Html.DisplayNameFor(model => model.LegalPerson)',
+          width: 120,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*联系人*/
+          field: 'Contect',
+          title: '@Html.DisplayNameFor(model => model.Contect)',
+          width: 120,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {    /*联系电话*/
+          field: 'PhoneNumber',
+          title: '@Html.DisplayNameFor(model => model.PhoneNumber)',
+          width: 120,
+          hidden: false,
+          sortable: true,
+          resizable: true
+        },
+        {   /*注册日期*/
+          field: 'RegisterDate',
+          title: '@Html.DisplayNameFor(model => model.RegisterDate)',
+          width: 100,
+          align: 'right',
+          hidden: false,
+          formatter: dateformatter,
+          sortable: true,
+          resizable: true
+        },
+        {   /*有效期*/
+          field: 'ExpirationDate',
+          title: '@Html.DisplayNameFor(model => model.ExpirationDate)',
+          width: 100,
+          align: 'right',
+          hidden: false,
+          formatter: dateformatter,
+          sortable: true,
+          resizable: true
+        }
+      ]]
+    })
+      .treegrid('enableFilter', [
+        {     /*注册日期*/
+          field: 'RegisterDate',
+          type: 'dateRange',
+          options: {
+          }
+        },
+        {     /*有效期*/
+          field: 'ExpirationDate',
+          type: 'dateRange',
+          options: {
+          }
+        },
+
+      ]);
+
+
+  });
+
+  </script>
+
+
+
+}
+
+

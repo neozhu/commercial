@@ -1,0 +1,84 @@
+﻿/* input */
+.fileuploader-theme-dragdrop .fileuploader-input {
+    display: block;
+    padding: 26px 0;
+    background: #fff;
+    border: 2px dashed #c2cdda;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.fileuploader-theme-dragdrop .fileuploader-input .fileuploader-main-icon {
+    display: block;
+    font-size: 56px;
+	margin: 0 auto;
+	margin-bottom: 16px;
+    -webkit-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+}
+.fileuploader-theme-dragdrop .fileuploader-input h3 {
+    margin: 0;
+    margin-bottom: 8px;
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #5B5B7B;
+    white-space: normal;
+}
+.fileuploader-theme-dragdrop .fileuploader-input p {
+    margin: 0;
+    padding: 0;
+    color: #90a0bc;
+    margin-bottom: 12px;
+}
+
+/* dragging state */
+.fileuploader-theme-dragdrop .fileuploader-input .fileuploader-input-inner,
+.fileuploader-theme-dragdrop .fileuploader-input.fileuploader-dragging .fileuploader-main-icon {
+    -webkit-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+}
+.fileuploader-theme-dragdrop .fileuploader-input.fileuploader-dragging .fileuploader-input-inner {
+    opacity: 0.6;
+}    
+.fileuploader-theme-dragdrop .fileuploader-input.fileuploader-dragging .fileuploader-main-icon {
+    -webkit-transform: translateY(18px);
+    		transform: translateY(18px);
+}
+.fileuploader-theme-dragdrop .fileuploader-input.fileuploader-dragging .fileuploader-input-button {
+    -webkit-transform: none;
+            transform: none;
+    opacity: 1;
+}
+
+.file-ext-xls .fileuploader-item-icon, .file-ext-xlsx .fileuploader-item-icon {
+  background-color: #14a73c !important;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M5 17.33V6.67L15 4v16L5 17.33zM19 6h-3v12h3V6zm-6.148 9.5l-2.08-3.5 2.043-3.5H11.57l-1.244 2.246c-.047.196-.125.382-.232.554-.088-.173-.158-.354-.21-.54l-1.2-2.26H7.338L9.33 12l-2.182 3.5h1.338l1.396-2.416c.066-.14.117-.385.14-.385a1.58 1.58 0 0 1 .131.385l1.38 2.416h1.32z'/%3E%3C/svg%3E") !important;
+}
+  .file-ext-xls .fileuploader-item-icon i, .file-ext-xlsx .fileuploader-item-icon i {
+    visibility: hidden;
+    color: #fff;
+  }
+.fileuploader-items .fileuploader-item {
+  position: relative;
+  margin: 0;
+  padding: 20px 16px 20px 22px;
+  border-bottom: 1px solid #ebeef1;
+  animation-duration: .6s;
+}
+  .fileuploader-items .fileuploader-item .fileuploader-item-icon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: default;
+    background-color: #ddd;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 28px;
+  }

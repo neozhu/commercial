@@ -1,0 +1,306 @@
+﻿﻿@model WebApp.Models.Attachment
+<!-- 弹出编辑窗体表单 -->
+ <div id="attachmentdetailwindow" class="easyui-window" 
+      title="明细数据" 
+      data-options="modal:true,
+                    closed:true,
+                    minimizable:false,
+                    collapsible:false,
+                    maximized:false,
+                    iconCls:'icon-more',
+                    footer:'#windowfooter',
+                    closeDuration:200,
+                    closeAnimation:'slide',
+                    openDuration:300,
+                    openAnimation:'slide',
+                    onBeforeClose:function(){
+                      var that = $(this);
+                      if(attachmenthasmodified()){
+                        $.messager.confirm('确认','你确定要放弃保存修改的记录?',function(r){
+                        if (r){
+                          var opts = that.panel('options');
+                          var onBeforeClose = opts.onBeforeClose;
+                          opts.onBeforeClose = function(){};
+                          that.panel('close');
+                          opts.onBeforeClose = onBeforeClose;
+                          hook = false;
+                        }
+                        });
+                        return false;
+                      }
+                    },
+                    onOpen:function(){
+                       $(this).window('vcenter');
+                       $(this).window('hcenter');
+                    },
+                    onRestore:function(){
+                    },
+                    onMaximize:function(){
+                    }
+                    " style="width:800px;height:450px;display:none">
+  <!-- toolbar -->
+  <div class="panel-content py-2 rounded-bottom border-faded border-left-0 border-right-0  text-muted bg-subtlelight-fade sticky-top">
+    <div class="row align-items-center m-0">
+      <div class="col">
+        <div class="btn-group btn-group-sm">
+          <button name="saveitembutton" onclick="saveattachmentitem()" class="btn btn-default">
+            <i class="fal fa-save"></i> @Html.L("Save")
+          </button>
+        </div>
+        <div class="btn-group btn-group-sm" id="deleteitem-btn-group">
+          <button onclick="deleteattachmentitem()" class="btn btn-danger">
+            <i class="fal fa-times"></i> @Html.L("Delete")
+          </button>
+        </div>
+      
+      </div>
+      <div class="col d-flex">
+
+      </div>
+    </div>
+  </div>
+ <!-- panel container form  -->
+  <div class="panel-container show">
+    <div class="panel-content">
+           <form id="attachment_form" 
+              class="easyui-form form-horizontal padding-10" 
+              method="post" 
+              data-options="novalidate:true,
+                            onChange: function(target){
+                              hook = true;
+                              $('button[name*=\'saveitembutton\']').prop('disabled', false);
+                             },
+                             onLoadSuccess:function(data){
+                               hook = false;
+                               $('button[name*=\'saveitembutton\']').prop('disabled', true);
+                             }">
+  @Html.AntiForgeryToken()
+   <!--Primary Key-->
+  @Html.HiddenFor(model=>model.Id)
+   <fieldset class="form-group">
+   <div class="row m-1">
+
+   <!--文件名-->
+        <label class="col-md-2 mb-1 form-label text-right text-danger">@Html.DisplayNameFor(model => model.FileName)</label>
+		<div class="col-md-4 mb-1">  
+			<input id="@Html.IdFor(model => model.FileName)" 
+				   name="@Html.NameFor(model => model.FileName)" 
+				   value="@Html.ValueFor(model => model.FileName)"
+				   tabindex="0" required
+				   class="easyui-textbox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.FileName)',
+								 required:true, 
+                                 validType: 'length[0,100]'
+                                 " />
+       </div>
+				   
+   <!--文件ID-->
+        <label class="col-md-2 mb-1 form-label text-right ">@Html.DisplayNameFor(model => model.FileId)</label>
+		<div class="col-md-4 mb-1">  
+			<input id="@Html.IdFor(model => model.FileId)" 
+				   name="@Html.NameFor(model => model.FileId)" 
+				   value="@Html.ValueFor(model => model.FileId)"
+				   tabindex="1" 
+				   class="easyui-textbox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.FileId)',
+								 required:false, 
+                                 validType: 'length[0,100]'
+                                 " />
+       </div>
+				   
+
+   <!--附件类型-->
+        <label class="col-md-2 mb-1 form-label text-right ">@Html.DisplayNameFor(model => model.Ext)</label>
+		<div class="col-md-4 mb-1">  
+			<input id="@Html.IdFor(model => model.Ext)" 
+				   name="@Html.NameFor(model => model.Ext)" 
+				   value="@Html.ValueFor(model => model.Ext)"
+				   tabindex="2" 
+				   class="easyui-textbox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.Ext)',
+								 required:false, 
+                                 validType: 'length[0,100]'
+                                 " />
+       </div>
+				   
+   <!--保存路径-->
+        <label class="col-md-2 mb-1 form-label text-right ">@Html.DisplayNameFor(model => model.FilePath)</label>
+		<div class="col-md-4 mb-1">  
+			<input id="@Html.IdFor(model => model.FilePath)" 
+				   name="@Html.NameFor(model => model.FilePath)" 
+				   value="@Html.ValueFor(model => model.FilePath)"
+				   tabindex="3" 
+				   class="easyui-textbox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.FilePath)',
+								 required:false, 
+                                 validType: 'length[0,50]'
+                                 " />
+       </div>
+				   
+
+   <!--关联单号-->
+        <label class="col-md-2 mb-1 form-label text-right ">@Html.DisplayNameFor(model => model.RefKey)</label>
+		<div class="col-md-4 mb-1">  
+			<input id="@Html.IdFor(model => model.RefKey)" 
+				   name="@Html.NameFor(model => model.RefKey)" 
+				   value="@Html.ValueFor(model => model.RefKey)"
+				   tabindex="4" 
+				   class="easyui-textbox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.RefKey)',
+								 required:false, 
+                                 validType: 'length[0,100]'
+                                 " />
+       </div>
+				   
+   <!--上传用户-->
+        <label class="col-md-2 mb-1 form-label text-right ">@Html.DisplayNameFor(model => model.Owner)</label>
+		<div class="col-md-4 mb-1">  
+			<input id="@Html.IdFor(model => model.Owner)" 
+				   name="@Html.NameFor(model => model.Owner)" 
+				   value="@Html.ValueFor(model => model.Owner)"
+				   tabindex="5" 
+				   class="easyui-textbox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.Owner)',
+								 required:false, 
+                                 validType: 'length[0,20]'
+                                 " />
+       </div>
+				   
+
+   <!--上传时间-->
+        <label class="col-md-2 mb-1 form-label text-right text-danger">@Html.DisplayNameFor(model => model.Upload)</label>
+		<div class="col-md-4 mb-1">  
+                <input id="@Html.IdFor(model => model.Upload)" 
+			       name="@Html.NameFor(model => model.Upload)"
+                   value="@Html.ValueFor(model => model.Upload)"
+           		   tabindex="6"  required
+				   class="easyui-datebox" 
+                   style="width:100%"
+				   type="text" 
+				   data-options="prompt:'@Html.DescriptionFor(model => model.Upload)',
+								 required:true,
+								 formatter:dateformatter" />
+     </div>
+				   
+	    </div> 
+      </fieldset>
+   </form>
+    </div>
+    </div>
+</div>
+<div id="windowfooter" style="padding:5px;">&nbsp;</div>
+<!-- 弹出窗体form表单 -->
+<!-- 弹出编辑对话框 -->
+
+<!--begin popup detailview javascript block -->
+<script type="text/javascript">
+    //判断新增编辑状态
+    var MODELSTATE = 'Added';
+    var attachmentid = null;
+    function openattachmentdetailwindow(data,state) {
+         MODELSTATE = state;
+         initattachmentdetailview();
+         attachmentid = (data.Id || 0);
+         $('#attachmentdetailwindow').window('open');
+         $('#attachment_form').form('reset');
+         $('#attachment_form').form('load', data);
+             }
+  //删除当前记录
+  function deleteattachmentitem() {
+    $.messager.confirm('确认', '你确定要删除该记录?', result => {
+      if (result) {
+        const url = `/Attachments/Delete/${attachmentid}`;
+        $.get(url).done(res => {
+          if (res.success) {
+            toastr.success("删除成功");
+            $dg.datagrid('reload');
+            $('#attachmentdetailwindow').window('close');
+          } else {
+            $.messager.alert('错误', res.err, 'error');
+          }
+        });
+      }
+    });
+  }
+    //async 保存数据
+    async function saveattachmentitem() { 
+      const $attachmentform = $('#attachment_form');
+      if ($attachmentform.form('enableValidation').form('validate')) {
+            let attachment = $attachmentform.serializeJSON();
+            let url = '/Attachments/Edit';
+            //判断是新增或是修改方法
+            if (MODELSTATE === 'Added') {
+                url = '/Attachments/Create';
+            }
+            var token = $('input[name="__RequestVerificationToken"]', $attachmentform).val();
+            $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        __RequestVerificationToken: token,
+                        attachment:attachment
+                    },
+                    dataType: 'json',
+                    contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                })
+                .done(response => {
+                    if (response.success) {
+                        hook = false;
+                        $attachmentform.form('disableValidation');
+                        $dg.datagrid('reload');
+                        $('#attachmentdetailwindow').window("close");
+                        toastr.success("保存成功");  
+                    } else {
+                        $.messager.alert("错误",   response.err, "error");
+                    }
+                    })
+                .fail((jqXHR, textStatus, errorThrown) => {
+                       $.messager.alert('异常', `${jqXHR.status}: ${jqXHR.statusText} `, 'error');
+                    });
+        }
+    }
+    //关闭窗口
+    function closeattachmentdetailwindow() {
+        $('#attachmentdetailwindow').window('close');
+    }
+    //todo
+    function todo() {
+         console.log('todo.....');
+    }
+     //判断是否有没有保存的记录
+     function attachmenthasmodified() {
+            return hook;
+
+     }
+
+
+function initattachmentdetailview() {
+  //判断是否显示功能按钮
+  if (MODELSTATE === 'Added') {
+    $('#deleteitem-btn-group').hide();
+  } else {
+    $('#deleteitem-btn-group').show();
+  }
+
+//回车光标移动到下个输入控件
+    //日期类型 上传时间
+	$('#Upload').datebox('textbox').bind('keydown', function (e) {
+      if (e.keyCode == 13) {
+        $(e.target).emulateTab();
+      }
+    });
+}
+</script>
+
