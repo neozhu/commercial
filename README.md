@@ -1,55 +1,98 @@
-## Customs Inspection Commission Business Management System
+# Delegated Business Management System
 ![Demo](doc/m0.jpg)
 ![Demo](doc/t1.jpg)
 
-### Demo WebSite: https://inspectpro.i247365.net/
+### Demo WebSite: [https://inspectpro.i247365.net/](https://commercial.blazorserver.com/)
 - Login user and password
 - User Name: Demo
 - Password: 123456
-## Project Introduction
-This project is a customs inspection commission business management system, mainly including functions such as commission registration, import and export, upload, review, quotation, bill review, bill sending, invoicing, report registration, automatic electronic report sending, paper report mailing registration, and payment management, aiming to improve business management efficiency and quality.
+## Project Overview
 
-### Operating Environment
-- .net framework 4.8
-- Windows Server 2012 or above
-- MS SQL Server 2012 or above
-## Business Requirements
-### Commission Registration Function
-The sampler enters the commission information in Lims and must enter the contact person's mobile phone number. The effective date of the commission must be specified.
-### Commission Export and Import
-The sampler can export commission information from Lims and import it into the business management system.
-The system will automatically determine whether it is a long-term customer or a short-term customer based on the "commissioning unit" and associate the account period and discount to automatically calculate the payment deadline.
-Payment deadline = sample delivery date + 7 working days. If the commissioning unit has a contract, the payment deadline will be determined according to the payment period stipulated in the contract, and the payment deadline will be the end of the payment period + 15 working days.
-The commissioning unit information is maintained in the "customer management".
-### Commission Upload Function
-The sampler can scan the paper commission form to generate a PDF file and upload the corresponding commission form to the business management system.
-### Commission Review Function
-The reviewer checks the business management system data based on the paper commission form. The process of checking and modifying in Lims directly must be specified.
-### Commission Quotation Function
-The quotation personnel select one or more sample data for a commissioning enterprise and choose a discount to generate a bill.
-Online Bill Review Function
-The bill is reviewed online according to the rules.
-Bill review rules: Ma Yanyan is 20% off or more (including 20% off), Liu Xing and Zhang Wengui are 30% off or more (including 30% off), Cao Xizhong and Liu Xing are below 30% off (excluding 30% off), and two people approve at the same time.
-### Automatic Bill Sending Function
-The customer service personnel send the approved bills to the customer for confirmation.
-The system automatically sends a bill link to the customer via SMS. The bill has a business chapter watermark, and the customer can download the bill by themselves.
-If there are no objections to the bill, the customer can confirm the bill and pay the corresponding fee.
-Customer service personnel can manually supplement or resend.
-### Invoicing Function
-The finance personnel issue invoices based on the bank's incoming bills and verify the bills, filling in the invoice.
-### Several Ways to Generate Bills
-Guohuan's commission form
-Guohuan's commission form sample number starts with flxx-e
-Guohuan charges separately for each test item
-Calculate according to the explanation in the table below based on the selected commission form test items
+The Delegated Business Management System is a comprehensive solution, specifically designed to manage delegated tasks for businesses and individual clients. With highly automated processes and a user-friendly interface, the system covers the entire process from receiving client's delegated tasks to the final delivery of inspection results and invoicing via express.
 
-When generating bills, users can upload PDF files.
-Guohuan bills do not require approval from leaders and are automatically approved by the system and enter the verification stage.
-1. Zijin's order
-Zijin's order refers to the "special request description" field that contains "Zijin". When generating bills, users can enter the total amount after discount and the total amount received, and can also upload PDF files. Zijin's bills do not require approval from leaders and are automatically approved by the system and enter the verification stage.
-2. Japanese-style order
-The calculation method of the Japanese-style order is similar to that of Guohuan, and it is also calculated in the form of "enterprise-package" to calculate fees. Specific enterprise-package standards will be provided separately. Note: If the custom order number field contains "Quality Control Sample", this sample will not be charged.
-3. Market Bureau order
-The Market Bureau order starts with "ff". Bills can be generated by importing an Excel file (the main field in the Excel file is the sample number). When generating bills, users can enter the payment unit and the actual amount received, and upload PDF files. Market Bureau bills do not require approval from leaders and are automatically approved by the system and enter the verification stage.
-4. Ordinary order
-When generating bills, users can enter a uniform discount, or allow users to modify the discount for individual samples.
+### **Background & Challenges**
+
+With the rapid expansion and diversification of business operations, traditional ways of managing delegated tasks are no longer sufficient for modern, efficient, and transparent requirements. Whether it's the creation, approval, write-off of the delegation slip, or coordination with customers, suppliers, and logistics, it requires a significant amount of time and manpower and is prone to mistakes and omissions.
+
+### **Solution & Advantages**
+
+The Delegated Business Management System was designed to overcome these challenges. Not only does it systematize and automate the entire delegation process, but it also has the following significant advantages:
+
+- **Efficiency & Accuracy**: Through automated workflows and centralized management, greatly improving processing speed and reducing human errors.
+- **Flexibility**: Can be flexibly configured and expanded according to different customers' and business needs.
+- **Transparency**: All information and statuses of delegated tasks can be queried in real time, ensuring business transparency.
+- **Integration**: Seamless integration with financial, logistics, and other systems for true end-to-end management.
+
+### **Target Audience**
+
+This system is suitable for medium to large enterprises, small businesses, freelancers, and anyone else needing to efficiently manage delegated tasks.
+
+By using the Delegated Business Management System, you will find that it not only improves work efficiency but also adds new dimensions of visualization and control to your business.
+
+## Main Features
+
+### 1. **Company Information**
+
+Record company's basic information, build a global system identity for easy reference in other modules.
+
+### 2. **Customer Management**
+
+All-encompassing management of customers, including:
+- **Customer Packages**: Flexible setting and management of various customer package options.
+- **Customer Information**: Extensible customer information files, easy for inquiry and maintenance.
+- **Contract Management**: Real-time contract status tracking and reminders.
+- **Billing Units**: One-stop management of customer billing units and standards.
+
+### 3. **Delegation Order Management**
+
+Full-cycle management of delegation orders from creation to completion:
+- **Delegation Order Information**: Convenient delegation order entry, search, and tracking.
+- **Bill Information**: Integrated with the financial system for automated bill processing.
+- **Bill Approval**: Customizable multilevel review process to ensure bill accuracy.
+- **Bill Write-Off**: Seamless connection with the invoice management system for one-click write-off.
+- **Invoice Number Registration**: Intelligent recognition and management of invoice numbers related to bills.
+- **Express Inspection Reports/Invoices**: Automated express processes in collaboration with the logistics system.
+
+### 4. **Attachment Management**
+
+Centralized management of all attachments:
+- **Delegation Order Attachments**: Centralized storage of all files and pictures related to delegation orders.
+- **Inspection Report Attachments**: Easy access and management of files related to inspection reports.
+
+### 5. **System Management**
+
+Comprehensive back-end management features:
+- **Tenant Management**: Adaptable to multi-tenant environments, flexible expansion.
+- **System Account**: Secure account management and permission allocation.
+- **Role Management**: Flexible role definition and authorization.
+- **Authorization Management**: Fine-grained access control to ensure data security.
+- **Menu Navigation Management**: Responsive navigation menu customization.
+- **System Logs**: Full recording of operation trails for easy auditing.
+- **Task Monitoring**: Real-time system performance monitoring, early problem detection.
+- **API Management**: Convenient external API management and monitoring.
+
+## Installation & Configuration
+
+(Provide detailed steps and links about how to install and configure the Delegated Business Management System here.)
+
+## User Guide
+
+(Provide a user tutorial to help new users quickly get started.)
+
+## Open Source Collaboration
+
+We welcome anyone to participate in and improve the project. Please see the [Contribution Guide](link) for more information.
+
+## Contact Us
+
+For any questions or suggestions, please contact us via:
+- Email: new163@163.com
+- Project Homepage: commercial.blazorserver.com
+
+## License
+
+This project is licensed under the MIT License. For more information, please see [LICENSE.md](link).
+
+---
+
+If you have any additional requirements or need further modifications, please let me know.
