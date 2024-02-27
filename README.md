@@ -2,7 +2,7 @@
 ![Demo](doc/m0.jpg)
 ![Demo](doc/t1.jpg)
 
-### Demo WebSite: [https://inspectpro.i247365.net/](https://commercial.blazorserver.com/)
+### Demo WebSite: [ https://commercial.blazorserver.com/](https://commercial.blazorserver.com/)
 - Login user and password
 - User Name: Demo
 - Password: 123456
